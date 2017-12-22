@@ -127,7 +127,7 @@ func main(){
 
 
 		time.Sleep(time.Second)
-		//cmd := exec.Command("cls")
+		//  cmd := exec.Command("cls")
 		//_ = cmd.Run()
 		for x:=1; x<20; x++{
 			fmt.Println()
