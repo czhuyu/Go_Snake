@@ -23,6 +23,35 @@ func main(){
 	snake[0] = "0,0"
 	//orientation = 2
 
+	key := make(chan string)
+	go func() {
+		err := termbox.Init()
+		if err != nil {
+			panic(err)
+		}
+		defer termbox.Close()
+	Loop:
+		for {
+			switch ev := termbox.PollEvent(); ev.Type {
+			case termbox.EventKey:
+				switch ev.Key {
+				case termbox.KeyArrowUp:
+					key <- "1"
+				case termbox.KeyArrowRight:
+					key <- "2"
+				case termbox.KeyArrowDown:
+					key <- "3"
+				case termbox.KeyArrowLeft:
+					key <- "4"
+				default:
+					key <- "2"
+					break Loop
+				}
+			}
+			log.Println(<-key)
+		}
+	}()
+
 	for {
 		for x:= 0;x<20 ;x++  {
 			fmt.Print("一")
@@ -52,42 +81,8 @@ func main(){
 		}
 
 
-
-		key := make(chan string)
-		go func() {
-			err := termbox.Init()
-			if err != nil {
-				panic(err)
-			}
-			defer termbox.Close()
-		Loop:
-			for {
-				switch ev := termbox.PollEvent(); ev.Type {
-				case termbox.EventKey:
-					switch ev.Key {
-					case termbox.KeyArrowUp:
-						key <- "1"
-					case termbox.KeyArrowRight:
-						key <- "2"
-					case termbox.KeyArrowDown:
-						key <- "3"
-					case termbox.KeyArrowLeft:
-						key <- "4"
-					default:
-						key <- "2"
-						break Loop
-					}
-				default:
-					key <- "2"
-					break Loop
-				}
-				log.Println(key)
-			}
-		}()
-
+		//log.Println(<-key)
 		orientation := <-key
-
-		log.Println(orientation)
 
 		if(orientation == "1"){
 			//向上移动蛇
@@ -95,22 +90,19 @@ func main(){
 			tempX,_ := strconv.Atoi(tempCoordinate[0])
 			tempY,_ := strconv.Atoi(tempCoordinate[1])
 			snake[0] = strconv.Itoa(tempX-1) + "," + strconv.Itoa(tempY)
-		}
-		if(orientation == "2"){
+		}else if(orientation == "2"){
 			//向右移动蛇
 			tempCoordinate := strings.Split(snake[0],",")
 			tempX,_ := strconv.Atoi(tempCoordinate[0])
 			tempY,_ := strconv.Atoi(tempCoordinate[1])
 			snake[0] = strconv.Itoa(tempX) + "," + strconv.Itoa(tempY + 1)
-		}
-		if(orientation == "3"){
+		}else if(orientation == "3"){
 			//向下移动蛇
 			tempCoordinate := strings.Split(snake[0],",")
 			tempX,_ := strconv.Atoi(tempCoordinate[0])
 			tempY,_ := strconv.Atoi(tempCoordinate[1])
 			snake[0] = strconv.Itoa(tempX+1) + "," + strconv.Itoa(tempY)
-		}
-		if(orientation == "4"){
+		}else{
 			//向左移动蛇
 			tempCoordinate := strings.Split(snake[0],",")
 			tempX,_ := strconv.Atoi(tempCoordinate[0])

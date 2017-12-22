@@ -1,20 +1,41 @@
 package main
 
+//import "fmt"
 import (
-	"fmt"
-	//"os/exec"
-	//"time"
-	"strings"
-	"reflect"
+	termbox "github.com/nsf/termbox-go"
+	//"golang.org/x/net/html/atom"
+	//"flag"
+	"log"
 )
 
-func main(){
-	var snake [50]string
-	//cmd := exec.Command("clear")
-	//_ = cmd.Run()
-	snake[0] = "0,0"
-	s := strings.Split(snake[0],",")
-	x, y := s[0], s[1]
-	fmt.Println(reflect.TypeOf(x))
-	fmt.Println(reflect.TypeOf(y))
+func main() {
+	err := termbox.Init()
+	if err != nil {
+		panic(err)
+	}
+	defer termbox.Close()
+	key := make(chan string)
+
+	go func() {
+		for {
+			switch ev := termbox.PollEvent(); ev.Type {
+			case termbox.EventKey:
+				switch ev.Key {
+				case termbox.KeyArrowUp:
+					key <- "1"
+				case termbox.KeyArrowRight:
+					key <- "2"
+				case termbox.KeyArrowDown:
+					key <- "3"
+				case termbox.KeyArrowLeft:
+					key <- "4"
+				default:
+					key <- "hhhh"
+				}
+			}
+		}
+	}()
+	for{
+		log.Println(<-key)
+	}
 }
