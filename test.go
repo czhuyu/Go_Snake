@@ -1,41 +1,44 @@
 package main
 
-//import "fmt"
+import "fmt"
 import (
-	termbox "github.com/nsf/termbox-go"
-	//"golang.org/x/net/html/atom"
-	//"flag"
-	"log"
+	"time"
+	"bufio"
+	"os"
 )
 
 func main() {
-	err := termbox.Init()
-	if err != nil {
-		panic(err)
-	}
-	defer termbox.Close()
-	key := make(chan string)
+	ch := make(chan string)
+	go func(ch chan string) {
+		/* Uncomment this block to actually read from stdin
 
-	go func() {
+		*/
+		reader := bufio.NewReader(os.Stdin)
 		for {
-			switch ev := termbox.PollEvent(); ev.Type {
-			case termbox.EventKey:
-				switch ev.Key {
-				case termbox.KeyArrowUp:
-					key <- "1"
-				case termbox.KeyArrowRight:
-					key <- "2"
-				case termbox.KeyArrowDown:
-					key <- "3"
-				case termbox.KeyArrowLeft:
-					key <- "4"
-				default:
-					key <- "hhhh"
-				}
+			s, err := reader.ReadString('\n')
+			if err != nil { // Maybe log non io.EOF errors, if you want
+				close(ch)
+				return
 			}
+			ch <- s
 		}
-	}()
-	for{
-		log.Println(<-key)
+		// Simulating stdin
+		ch <- "A line of text"
+		close(ch)
+	}(ch)
+
+stdinloop:
+	for {
+		select {
+		case stdin, ok := <-ch:
+			if !ok {
+				break stdinloop
+			} else {
+				fmt.Println("Read input from stdin:", stdin)
+			}
+		case <-time.After(1 * time.Second):
+			// Do something when there is nothing read from stdin
+		}
 	}
+	fmt.Println("Done, stdin must be closed")
 }
