@@ -15,16 +15,21 @@ import (
 	//"log"
 )
 
+var gameMap [20][20]int
+var snake [50]string
+var orientation = 2
+var movecount = 0
+var HeadCoordinate = "0,5"
+var tailCoordinate = "0,5"
+
 func main(){
 
-	var gameMap [20][20]int
-	var snake [50]string
-	var orientation int
+
 	//var orientation int
 	//cmd := exec.Command("clear")
 	//_ = cmd.Run()
 
-	snake[0] = "0,5"
+	snake[0] = HeadCoordinate
 	//orientation = 2
 
 	for {
@@ -34,9 +39,9 @@ func main(){
 		fmt.Println()
 		for z:=0; z<50; z++  {
 			if("" != snake[z]) {
-				tempCoordinate := strings.Split(snake[z], ",")
-				CoordinateX, _ := strconv.Atoi(tempCoordinate[0])
-				CoordinateY, _ := strconv.Atoi(tempCoordinate[1])
+				tempHeadCoordinate := strings.Split(snake[z], ",")
+				CoordinateX, _ := strconv.Atoi(tempHeadCoordinate[0])
+				CoordinateY, _ := strconv.Atoi(tempHeadCoordinate[1])
 				gameMap[CoordinateX][CoordinateY] = 1
 			}
 		}
@@ -58,36 +63,60 @@ func main(){
 
 		//log.Println(<-key)
 		if(C.kbhit() == 1){
-			orientation = move()
-		}else{
-			orientation = 2
+			orientation = move(orientation)
 		}
 
 		if(orientation == 1){
 			//向上移动蛇
-			tempCoordinate := strings.Split(snake[0],",")
-			tempX,_ := strconv.Atoi(tempCoordinate[0])
-			tempY,_ := strconv.Atoi(tempCoordinate[1])
-			snake[0] = strconv.Itoa(tempX-1) + "," + strconv.Itoa(tempY)
+			tempHeadCoordinate := strings.Split(snake[0],",")
+			tempHeadX,_ := strconv.Atoi(tempHeadCoordinate[0])
+			tempHeadY,_ := strconv.Atoi(tempHeadCoordinate[1])
+			snake[0] = strconv.Itoa(tempHeadX-1) + "," + strconv.Itoa(tempHeadY)
+			HeadCoordinate = snake[0]
+			if(movecount >= 1){
+				snake[3] = tailCoordinate
+			}
+			snake[1] = tempHeadCoordinate[0] + ","+ tempHeadCoordinate[1]
+			tailCoordinate = snake[1]
 		}else if(orientation == 2){
 			//向右移动蛇
-			tempCoordinate := strings.Split(snake[0],",")
-			tempX,_ := strconv.Atoi(tempCoordinate[0])
-			tempY,_ := strconv.Atoi(tempCoordinate[1])
-			snake[0] = strconv.Itoa(tempX) + "," + strconv.Itoa(tempY + 1)
+			tempHeadCoordinate := strings.Split(snake[0],",")
+			tempHeadX,_ := strconv.Atoi(tempHeadCoordinate[0])
+			tempHeadY,_ := strconv.Atoi(tempHeadCoordinate[1])
+			snake[0] = strconv.Itoa(tempHeadX) + "," + strconv.Itoa(tempHeadY + 1)
+			HeadCoordinate = snake[0]
+			if(movecount >= 1){
+				snake[3] = tailCoordinate
+			}
+			snake[1] = tempHeadCoordinate[0] + ","+ tempHeadCoordinate[1]
+			tailCoordinate = snake[1]
 		}else if(orientation ==3){
 			//向下移动蛇
-			tempCoordinate := strings.Split(snake[0],",")
-			tempX,_ := strconv.Atoi(tempCoordinate[0])
-			tempY,_ := strconv.Atoi(tempCoordinate[1])
-			snake[0] = strconv.Itoa(tempX+1) + "," + strconv.Itoa(tempY)
+			tempHeadCoordinate := strings.Split(snake[0],",")
+			tempHeadX,_ := strconv.Atoi(tempHeadCoordinate[0])
+			tempHeadY,_ := strconv.Atoi(tempHeadCoordinate[1])
+			snake[0] = strconv.Itoa(tempHeadX+1) + "," + strconv.Itoa(tempHeadY)
+			HeadCoordinate = snake[0]
+			if(movecount >= 1){
+				snake[3] = tailCoordinate
+			}
+			snake[1] = tempHeadCoordinate[0] + ","+ tempHeadCoordinate[1]
+			tailCoordinate = snake[1]
 		}else{
 			//向左移动蛇
-			tempCoordinate := strings.Split(snake[0],",")
-			tempX,_ := strconv.Atoi(tempCoordinate[0])
-			tempY,_ := strconv.Atoi(tempCoordinate[1])
-			snake[0] = strconv.Itoa(tempX) + "," + strconv.Itoa(tempY - 1)
+			tempHeadCoordinate := strings.Split(snake[0],",")
+			tempHeadX,_ := strconv.Atoi(tempHeadCoordinate[0])
+			tempHeadY,_ := strconv.Atoi(tempHeadCoordinate[1])
+			snake[0] = strconv.Itoa(tempHeadX) + "," + strconv.Itoa(tempHeadY - 1)
+			HeadCoordinate = snake[0]
+			if(movecount >= 1){
+				snake[3] = tailCoordinate
+			}
+			snake[1] = tempHeadCoordinate[0] + ","+ tempHeadCoordinate[1]
+			tailCoordinate = snake[1]
 		}
+
+		movecount++
 
 
 		for i:=0; i<20; i++ {
@@ -106,17 +135,27 @@ func main(){
 	}
 }
 
-func move() int {
+func move(before int) int {
 	key := C.getch()
-	if(key == 119){
+	if(key == 119 && before != 3){
 		return 1
-	}else if(key == 100){
+	}else if(key == 100 && before != 4){
 		return 2
-	}else if(key == 115){
+	}else if(key == 115 && before != 1){
 		return 3
-	}else if(key == 97){
+	}else if(key == 97 && before !=2){
 		return 4
 	}else{
-		return 2
+		return before
 	}
+}
+
+func getSnakeLen() int {
+	i := 0
+	for z:=0; z<50; z++  {
+		if("" != snake[z]) {
+			i++
+		}
+	}
+	return i
 }
