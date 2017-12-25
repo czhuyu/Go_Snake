@@ -55,12 +55,12 @@ func moveSnake(){
 		tempHeadX,_ := strconv.Atoi(tempheadCoordinate[0])
 		snake[0] = strconv.Itoa(tempHeadX-1) + "," + tempheadCoordinate[1]
 		headCoordinate = snake[0]
-		if(movecount >= 1){
-			if(snakeLen >= 3 && isGetFood()){
-				for i:=1; i<=snakeLen-3; i++ {
-					snake[snakeLen-i] = snake[snakeLen-(i+1)]
+		if(movecount >= 1) {
+			if (snakeLen >= 3) {
+				if (isGetFood()) {
+					snakeLen++
+					drawFood()
 				}
-			}else if(snakeLen >= 3 && !isGetFood()){
 				for i:=1; i<=snakeLen-3; i++ {
 					snake[snakeLen-i] = snake[snakeLen-(i+1)]
 				}
@@ -74,12 +74,12 @@ func moveSnake(){
 		tempHeadY,_ := strconv.Atoi(tempheadCoordinate[1])
 		snake[0] = tempheadCoordinate[0] + "," + strconv.Itoa(tempHeadY + 1)
 		headCoordinate = snake[0]
-		if(movecount >= 1){
-			if(snakeLen >= 3 && isGetFood()){
-				for i:=1; i<=snakeLen-3; i++ {
-					snake[snakeLen-i] = snake[snakeLen-(i+1)]
+		if(movecount >= 1) {
+			if (snakeLen >= 3) {
+				if (isGetFood()) {
+					snakeLen++
+					drawFood()
 				}
-			}else if(snakeLen >= 3 && !isGetFood()){
 				for i:=1; i<=snakeLen-3; i++ {
 					snake[snakeLen-i] = snake[snakeLen-(i+1)]
 				}
@@ -93,12 +93,12 @@ func moveSnake(){
 		tempHeadX,_ := strconv.Atoi(tempheadCoordinate[0])
 		snake[0] = strconv.Itoa(tempHeadX+1) + "," + tempheadCoordinate[1]
 		headCoordinate = snake[0]
-		if(movecount >= 1){
-			if(snakeLen >= 3 && isGetFood()){
-				for i:=1; i<=snakeLen-3; i++ {
-					snake[snakeLen-i] = snake[snakeLen-(i+1)]
+		if(movecount >= 1) {
+			if (snakeLen >= 3) {
+				if (isGetFood()) {
+					snakeLen++
+					drawFood()
 				}
-			}else if(snakeLen >= 3 && !isGetFood()){
 				for i:=1; i<=snakeLen-3; i++ {
 					snake[snakeLen-i] = snake[snakeLen-(i+1)]
 				}
@@ -112,12 +112,12 @@ func moveSnake(){
 		tempHeadY,_ := strconv.Atoi(tempheadCoordinate[1])
 		snake[0] = tempheadCoordinate[0] + "," + strconv.Itoa(tempHeadY - 1)
 		headCoordinate = snake[0]
-		if(movecount >= 1){
-			if(snakeLen >= 3 && isGetFood()){
-				for i:=1; i<=snakeLen-3; i++ {
-					snake[snakeLen-i] = snake[snakeLen-(i+1)]
+		if(movecount >= 1) {
+			if (snakeLen >= 3) {
+				if (isGetFood()) {
+					snakeLen++
+					drawFood()
 				}
-			}else if(snakeLen >= 3 && !isGetFood()){
 				for i:=1; i<=snakeLen-3; i++ {
 					snake[snakeLen-i] = snake[snakeLen-(i+1)]
 				}
@@ -203,8 +203,6 @@ func generateRandnum() int {
 func isGetFood() bool{
 	if(headCoordinate == foodCoordinate){
 		//吃到了食物
-		snakeLen++
-		drawFood()
 		return true
 	}else{
 		return false
