@@ -60,7 +60,7 @@ func main(){
 		if(C.kbhit() == 1){
 			orientation = move()
 		}else{
-			orientation = 3
+			orientation = 2
 		}
 
 		if(orientation == 1){
@@ -107,5 +107,16 @@ func main(){
 }
 
 func move() int {
-	return 2
+	key := C.getch()
+	if(key == 119){
+		return 1
+	}else if(key == 100){
+		return 2
+	}else if(key == 115){
+		return 3
+	}else if(key == 97){
+		return 4
+	}else{
+		return 2
+	}
 }
