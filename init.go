@@ -15,7 +15,6 @@ var snake [50]string
 var orientation = 2
 var movecount = 0
 var headCoordinate = "0,5" //初始蛇头
-var tailCoordinate = "0,5" //初始蛇尾
 var foodCoordinate = "-1,-1"
 var snakeLen = 3
 
@@ -57,11 +56,18 @@ func moveSnake(){
 		snake[0] = strconv.Itoa(tempHeadX-1) + "," + tempheadCoordinate[1]
 		headCoordinate = snake[0]
 		if(movecount >= 1){
-			snake[2] = tailCoordinate
+			if(snakeLen >= 3 && isGetFood()){
+				for i:=1; i<=snakeLen-3; i++ {
+					snake[snakeLen-i] = snake[snakeLen-(i+1)]
+				}
+			}else if(snakeLen >= 3 && !isGetFood()){
+				for i:=1; i<=snakeLen-3; i++ {
+					snake[snakeLen-i] = snake[snakeLen-(i+1)]
+				}
+			}
+			snake[2] = snake[1]
 		}
 		snake[1] = tempheadCoordinate[0] + ","+ tempheadCoordinate[1]
-		tailCoordinate = snake[1]
-		isGetFood()
 	}else if(orientation == 2){
 		//向右移动蛇
 		tempheadCoordinate := strings.Split(snake[0],",")
@@ -69,11 +75,18 @@ func moveSnake(){
 		snake[0] = tempheadCoordinate[0] + "," + strconv.Itoa(tempHeadY + 1)
 		headCoordinate = snake[0]
 		if(movecount >= 1){
-			snake[2] = tailCoordinate
+			if(snakeLen >= 3 && isGetFood()){
+				for i:=1; i<=snakeLen-3; i++ {
+					snake[snakeLen-i] = snake[snakeLen-(i+1)]
+				}
+			}else if(snakeLen >= 3 && !isGetFood()){
+				for i:=1; i<=snakeLen-3; i++ {
+					snake[snakeLen-i] = snake[snakeLen-(i+1)]
+				}
+			}
+			snake[2] = snake[1]
 		}
 		snake[1] = tempheadCoordinate[0] + ","+ tempheadCoordinate[1]
-		tailCoordinate = snake[1]
-		isGetFood()
 	}else if(orientation ==3){
 		//向下移动蛇
 		tempheadCoordinate := strings.Split(snake[0],",")
@@ -81,11 +94,18 @@ func moveSnake(){
 		snake[0] = strconv.Itoa(tempHeadX+1) + "," + tempheadCoordinate[1]
 		headCoordinate = snake[0]
 		if(movecount >= 1){
-			snake[2] = tailCoordinate
+			if(snakeLen >= 3 && isGetFood()){
+				for i:=1; i<=snakeLen-3; i++ {
+					snake[snakeLen-i] = snake[snakeLen-(i+1)]
+				}
+			}else if(snakeLen >= 3 && !isGetFood()){
+				for i:=1; i<=snakeLen-3; i++ {
+					snake[snakeLen-i] = snake[snakeLen-(i+1)]
+				}
+			}
+			snake[2] = snake[1]
 		}
 		snake[1] = tempheadCoordinate[0] + ","+ tempheadCoordinate[1]
-		tailCoordinate = snake[1]
-		isGetFood()
 	}else{
 		//向左移动蛇
 		tempheadCoordinate := strings.Split(snake[0],",")
@@ -93,11 +113,18 @@ func moveSnake(){
 		snake[0] = tempheadCoordinate[0] + "," + strconv.Itoa(tempHeadY - 1)
 		headCoordinate = snake[0]
 		if(movecount >= 1){
-			snake[2] = tailCoordinate
+			if(snakeLen >= 3 && isGetFood()){
+				for i:=1; i<=snakeLen-3; i++ {
+					snake[snakeLen-i] = snake[snakeLen-(i+1)]
+				}
+			}else if(snakeLen >= 3 && !isGetFood()){
+				for i:=1; i<=snakeLen-3; i++ {
+					snake[snakeLen-i] = snake[snakeLen-(i+1)]
+				}
+			}
+			snake[2] = snake[1]
 		}
 		snake[1] = tempheadCoordinate[0] + ","+ tempheadCoordinate[1]
-		tailCoordinate = snake[1]
-		isGetFood()
 	}
 }
 
@@ -173,16 +200,13 @@ func generateRandnum() int {
 	return randNum
 }
 
-func isGetFood(){
+func isGetFood() bool{
 	if(headCoordinate == foodCoordinate){
 		//吃到了食物
+		snakeLen++
 		drawFood()
-		//蛇身增长
+		return true
 	}else{
-		return
+		return false
 	}
-}
-
-func addSnakeLen(){
-	snake[snakeLen] = tailCoordinate
 }
