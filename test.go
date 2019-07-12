@@ -1,44 +1,43 @@
 package main
 
-import "fmt"
 import (
+	"fmt"
 	"time"
-	"bufio"
-	"os"
+	"github.com/nsf/termbox-go"
 )
 
-func main(){
-	ch := make(chan string)
-	go func(ch chan string) {
-		/* Uncomment this block to actually read from stdin
+func main() {
 
-		*/
-		reader := bufio.NewReader(os.Stdin)
-		for {
-			s, err := reader.ReadString('\n')
-			if err != nil { // Maybe log non io.EOF errors, if you want
-				close(ch)
-				return
-			}
-			ch <- s
-		}
-		// Simulating stdin
-		ch <- "A line of text"
-		close(ch)
-	}(ch)
 
-stdinloop:
-	for {
-		select {
-		case stdin, ok := <-ch:
-			if !ok {
-				break stdinloop
-			} else {
-				fmt.Println("Read input from stdin:", stdin)
-			}
-		case <-time.After(1 * time.Second):
-			// Do something when there is nothing read from stdin
-		}
+	err := termbox.Init()
+	if err != nil {
+		panic(err)
 	}
-	fmt.Println("Done, stdin must be closed")
+
+	events := make(chan termbox.Event, 1000)
+	go func() {
+		for {
+			events <- termbox.PollEvent()
+		}
+	}()
+
+	for true {
+		select {
+		case ev := <-events:
+			if ev.Type == termbox.EventKey {
+				// exit the game
+				if ev.Key == termbox.KeyArrowUp {
+					fmt.Println("you press key up")
+				}
+			}
+
+		default:
+
+		}
+		fmt.Println("---")
+		time.Sleep(time.Second)
+	}
+
+	termbox.Close()
+	fmt.Println("over")
 }
